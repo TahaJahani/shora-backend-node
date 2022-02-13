@@ -1,6 +1,5 @@
 const { User, PersonalAccessToken } = require('../database/sequelize')
 var bcrypt = require('bcryptjs');
-const user = require('../database/models/user');
 
 module.exports = async (req, res, next) => {
     let apiKey = req.headers.authorization && req.headers.authorization.split(' ')[1];
