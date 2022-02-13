@@ -24,6 +24,7 @@ const Rent = require('./models/rent')(sequelize, Sequelize)
 const Role = require('./models/role')(sequelize, Sequelize)
 const Transaction = require('./models/transaction')(sequelize, Sequelize)
 const User = require('./models/user')(sequelize, Sequelize)
+const PersonalAccessToken = require('./models/personalaccesstoken')(sequelize, Sequelize)
 
 
 Book.hasMany(Rent, {
@@ -95,4 +96,5 @@ module.exports = {
   Role,
   Transaction,
   User,
+  PersonalAccessToken,
 }
