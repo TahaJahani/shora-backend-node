@@ -97,4 +97,5 @@ module.exports = {
   Transaction,
   User,
   PersonalAccessToken,
+  DemandCategory
 }
