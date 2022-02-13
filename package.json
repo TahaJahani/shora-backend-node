@@ -22,5 +22,8 @@
     "node-singleflight": "^0.1.2",
     "pg": "^8.7.1",
     "sequelize": "^6.12.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.4.1"
   }
 }
