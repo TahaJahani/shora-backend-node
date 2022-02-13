@@ -12,6 +12,9 @@ var mainRouter = express.Router();
 mainRouter.use('/', indexRouter);
 
 var app = express();
+
+app.use(mainRouter);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
