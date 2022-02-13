@@ -56,14 +56,38 @@ module.exports = {
             body: 'required|max:500',
             category_id: 'required|numeric'
         })
+        if (err.length > 0)
+            return res.json({status: 'error', message: err[0]})
+        if (req.user.is_banned)
+            return res.json({status: 'error', message: 'حساب شما مسدود شده است. لطفا با مدیر وب‌سایت تماس بگیرید'})
+        let demand = await Demand.create({
+            user_id: req.user.id,
+            category_id: req.body.category_id,
+            status: 'pending',
+            body: req.body.body,
+        })
+        demand.user = req.user
+        demand.likes = []
+        return res.json({status: 'ok', data: {demand: demandResource.make(demand)}})
     },
 
     banUser: async (req, res) => {
-        //by demand id
+        let err = validator.check(req.params, { demand_id: 'required|numeric|min:1' })
+        if (err.length > 0)
+            return res.json({ status: 'error', message: err[0] })
+        let demand = await Demand.findOne({where: {id: req.params.demand_id}})
+        if (!demand)
+            return res.json({status: 'ok', message: 'تقاضای مورد نظر یافت نشد'})
+        await User.update({is_banned: 1}, {where: {id: demand.user_id}})
+        return res.json({status: 'ok'})
     },
 
     delete: async (req, res) => {
-        //by id
+        let err = validator.check(req.params, { id: 'required|numeric|min:1' })
+        if (err.length > 0)
+            return res.json({ status: 'error', message: err[0] })
+        await Demand.destroy({where: {id: req.params.id}})
+        return res.json({status: 'ok'})
     },
 
     likeDemand: async (req, res) => {
