@@ -4,6 +4,7 @@ const getError = (ruleName, ruleParam, key) => {
         required: `${translate(key)} اجباری است`,
         numeric: `${translate(key)} باید عددی باشد`,
         min: `مقدار ${translate(key)} باید حداقل ${ruleParam} باشد`,
+        max: `مقدار ${translate(key)} باید حداکثر ${ruleParam} باشد`,
     }
     return errors[ruleName]
 }
@@ -29,6 +30,15 @@ const ruleFunctions = {
         }
         return true
     },
+
+    max: (data, key, param) => {
+        if (data && data[key]) {
+            if (/\d+.?\d*/.test(data[key]))
+                return parseFloat(data[key]) <= param
+            return data[key].length <= param
+        }
+        return true;
+    }
 }
 
 module.exports = {

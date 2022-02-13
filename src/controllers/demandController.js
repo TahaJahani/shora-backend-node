@@ -52,7 +52,10 @@ module.exports = {
     },
 
     addDemand: async (req, res) => {
-
+        let err = validator.check(req.body, {
+            body: 'required|max:500',
+            category_id: 'required|numeric'
+        })
     },
 
     banUser: async (req, res) => {
