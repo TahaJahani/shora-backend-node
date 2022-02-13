@@ -1,17 +1,30 @@
+const { translate } = require('./translate')
 const getError = (rule, key) => {
-    const errors = [
-        // 'required' => ``
-    ]
+    const errors = {
+        required: `${translate(key)} اجباری است`,
+    }
+    return errors[rule]
 }
 
-const required = (data, key) => {
-
+const ruleFunctions = {
+    required: (data, key) => {
+        if (key in data && data[key])
+            return true;
+        return false;
+    },
 }
-const string = (data, key) => {
 
-}
 module.exports = {
     make: (data, rules) => {
-
+        let keys = Object.keys(rules)
+        let result = []
+        keys.forEach((key, index) => {
+            keyRules = rules[key].split('|')
+            keyRules.forEach((rule, index) => {
+                if (!ruleFunctions[rule](data, key))
+                    result.append(getError(rule, key))
+            })
+        })
+        return result;
     }
 }
