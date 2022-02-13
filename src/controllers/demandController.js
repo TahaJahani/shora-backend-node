@@ -41,10 +41,10 @@ module.exports = {
         let hasNext = demands.count > offset + 50;
         let lastPage = Math.ceil(demands.count / 50);
         demands = demands.rows;
-        return res.json({ 
-            status: 'ok', 
-            data: { 
-                demands: demandResource.collection(req, demands), 
+        return res.json({
+            status: 'ok',
+            data: {
+                demands: demandResource.collection(req, demands),
                 has_next: hasNext,
                 last_page: lastPage,
             }
@@ -57,9 +57,9 @@ module.exports = {
             category_id: 'required|numeric'
         })
         if (err.length > 0)
-            return res.json({status: 'error', message: err[0]})
+            return res.json({ status: 'error', message: err[0] })
         if (req.user.is_banned)
-            return res.json({status: 'error', message: 'حساب شما مسدود شده است. لطفا با مدیر وب‌سایت تماس بگیرید'})
+            return res.json({ status: 'error', message: 'حساب شما مسدود شده است. لطفا با مدیر وب‌سایت تماس بگیرید' })
         let demand = await Demand.create({
             user_id: req.user.id,
             category_id: req.body.category_id,
@@ -68,38 +68,66 @@ module.exports = {
         })
         demand.user = req.user
         demand.likes = []
-        return res.json({status: 'ok', data: {demand: demandResource.make(demand)}})
+        return res.json({ status: 'ok', data: { demand: demandResource.make(demand) } })
     },
 
     banUser: async (req, res) => {
         let err = validator.check(req.params, { demand_id: 'required|numeric|min:1' })
         if (err.length > 0)
             return res.json({ status: 'error', message: err[0] })
-        let demand = await Demand.findOne({where: {id: req.params.demand_id}})
+        let demand = await Demand.findOne({ where: { id: req.params.demand_id } })
         if (!demand)
-            return res.json({status: 'ok', message: 'تقاضای مورد نظر یافت نشد'})
-        await User.update({is_banned: 1}, {where: {id: demand.user_id}})
-        return res.json({status: 'ok'})
+            return res.json({ status: 'ok', message: 'تقاضای مورد نظر یافت نشد' })
+        await User.update({ is_banned: 1 }, { where: { id: demand.user_id } })
+        return res.json({ status: 'ok' })
     },
 
     delete: async (req, res) => {
         let err = validator.check(req.params, { id: 'required|numeric|min:1' })
         if (err.length > 0)
             return res.json({ status: 'error', message: err[0] })
-        await Demand.destroy({where: {id: req.params.id}})
-        return res.json({status: 'ok'})
+        await Demand.destroy({ where: { id: req.params.id } })
+        return res.json({ status: 'ok' })
     },
 
     likeDemand: async (req, res) => {
-        //by id
+        let err = validator.check(req.params, { id: 'required|numeric|min:1' })
+        if (err.length > 0)
+            return res.json({ status: 'error', message: err[0] })
+        let demand = await Demand.findOne({ where: { id: req.params.id } })
+        if (!demand)
+            return res.json({ status: 'error', message: 'تقاضای مورد نظر یافت نشد' })
+        try {
+            await Like.create({
+                user_id: req.user.id,
+                likeable_id: demand.id,
+                likeable_type: 'demand',
+            })
+            return res.json({status: 'ok'})
+        } catch (e) {
+            return res.json({status: 'error', message: 'شما قبلا این درخواست را لایک کرده‌اید'})
+        }
     },
 
     unlikeDemand: async (req, res) => {
-        //by id
+        let err = validator.check(req.params, { id: 'required|numeric|min:1' })
+        if (err.length > 0)
+            return res.json({ status: 'error', message: err[0] })
+        await Like.destroy({
+            where: {
+                user_id: req.user.id,
+                likeable_id: req.params.id,
+                likeable_type: 'demand',
+            }
+        })
+        return res.json({status: 'ok'})
     },
 
     changeStatus: async (req, res) => {
-
+        let err = validator.check(req.body, {
+            demand_id: 'required|numeric',
+            status: 'required|in:pending,accepted,rejected'
+        })
     }
 
 }

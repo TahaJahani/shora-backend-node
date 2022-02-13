@@ -5,6 +5,7 @@ const getError = (ruleName, ruleParam, key) => {
         numeric: `${translate(key)} باید عددی باشد`,
         min: `مقدار ${translate(key)} باید حداقل ${ruleParam} باشد`,
         max: `مقدار ${translate(key)} باید حداکثر ${ruleParam} باشد`,
+        in: `مقدار ${translate(key)} یک مقدار معتبر نیست`,
     }
     return errors[ruleName]
 }
@@ -38,6 +39,14 @@ const ruleFunctions = {
             return data[key].length <= param
         }
         return true;
+    },
+
+    in: (data, key, param) => {
+        if (data && data[key]) {
+            param = param.split(',')
+            return param.includes(data[key])
+        }
+        return true
     }
 }
 

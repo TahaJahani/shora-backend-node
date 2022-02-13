@@ -29,6 +29,11 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+    await queryInterface.addConstraint('likes', {
+      fields: ['user_id', 'likeable_id', 'likeable_type'],
+      type: 'unique',
+      name: 'userId_likeableId_likeableType_likes_unique'
+    })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('likes');
