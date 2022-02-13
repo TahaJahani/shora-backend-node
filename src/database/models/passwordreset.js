@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { gt } = require('sequelize/lib/operators');
 module.exports = (sequelize, DataTypes) => {
   class PasswordReset extends Model {
     /**
@@ -19,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
     used: sequelize.BOOLEAN,
     created_at: sequelize.DATE,
   }, {
+    defaultScope: {
+      where: {
+        created_at: {$gt: moment().subtract(20, 'minutes')},
+        used: 0,
+      },
+    },
     sequelize,
     tableName: 'password_resets',
     modelName: 'PasswordReset',
