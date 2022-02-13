@@ -55,6 +55,7 @@ Event.belongsToMany(User, {
 })
 
 Like.belongsTo(User, { foreignKey: 'user_id', as: 'user' })
+Like.belongsTo(Demand, { foreignKey: 'likeable_id', constraints: false })
 
 Locker.hasMany(Rent, {
   foreignKey: 'rentable_id',
@@ -68,6 +69,8 @@ Locker.hasMany(Rent, {
 PasswordReset.belongsTo(User, { foreignKey: 'user_id', as: 'user' })
 
 Rent.belongsTo(User, { foreignKey: 'user_id', as: 'user' })
+Rent.belongsTo(Locker, { foreignKey: 'rentable_id', constraints: false })
+Rent.belongsTo(Book, { foreignKey: 'rentable_id', constraints: false })
 
 User.hasMany(Rent, { foreignKey: 'user_id', as: 'rents' })
 User.hasMany(Role, { foreignKey: 'user_id', as: 'roles' })
@@ -77,7 +80,7 @@ User.belongsToMany(Event, {
   otherKey: 'event_id',
   as: 'registeredEvents'
 })
-User.hasMany(PasswordReset, {foreignKey: 'user_id', as: 'passwordResets'})
+User.hasMany(PasswordReset, { foreignKey: 'user_id', as: 'passwordResets' })
 
 
 module.exports = {
