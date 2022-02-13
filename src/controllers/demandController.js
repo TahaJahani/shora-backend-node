@@ -128,6 +128,11 @@ module.exports = {
             demand_id: 'required|numeric',
             status: 'required|in:pending,accepted,rejected'
         })
+        if (err.length > 0)
+            return res.json({status: 'error', message: err[0]})
+        
+        await Demand.update({status: req.body.status}, {where: {id: req.body.demand_id}})
+        return res.json({status: 'ok'})
     }
 
 }
