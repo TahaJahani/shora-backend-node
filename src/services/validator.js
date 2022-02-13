@@ -16,13 +16,13 @@ const ruleFunctions = {
     },
 
     numeric: (data, key, param) => {
-        if (data[key])
+        if (data && data[key])
             return /\d+/.test(data[key])
         return true
     },
 
     min: (data, key, param) => {
-        if (data[key]) {
+        if (data && data[key]) {
             if (/\d+.?\d*/.test(data[key]))
                 return parseFloat(data[key]) >= param
             return data[key].length >= param

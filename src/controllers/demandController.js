@@ -20,23 +20,35 @@ module.exports = {
     },
 
     getAll: async (req, res) => {
-        let err = validator.check(req.body, {category_id: 'numeric|min:1'})
+        let err = validator.check(req.body, { category_id: 'numeric|min:1' })
         if (err.length > 0)
-            return res.json({ status: 'error', message: err[0]})
+            return res.json({ status: 'error', message: err[0] })
         let offset = ((req.query.page ? req.query.page : 1) - 1) * 50;
         let whereClause = {}
-        if (req.body.category_id)
-            whereClause[category_id] = req.body.category_id
-        if (req.body.search)
-            whereClause[body] = {[Op.like]: `%${req.body.search}%`}
-        let demands = Demand.findAndCountAll({
+        if (req.body) {
+            if (req.body.category_id)
+                whereClause[category_id] = req.body.category_id
+            if (req.body.search)
+                whereClause[body] = { [Op.like]: `%${req.body.search}%` }
+        }
+        let demands = await Demand.findAndCountAll({
             where: whereClause,
             include: ['likes', 'category'],
-            order:[['created_at', 'DESC']],
+            order: [['created_at', 'DESC']],
             offset: offset,
             limit: 50,
         })
-        return res.json({status: 'ok', data: {demands: demands}})
+        let hasNext = demands.count > offset + 50;
+        let lastPage = Math.ceil(demands.count / 50);
+        demands = demands.rows;
+        return res.json({ 
+            status: 'ok', 
+            data: { 
+                demands: demandResource.collection(req, demands), 
+                has_next: hasNext,
+                last_page: lastPage,
+            }
+        })
     },
 
     addDemand: async (req, res) => {
