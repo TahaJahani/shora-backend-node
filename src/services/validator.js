@@ -12,10 +12,16 @@ const ruleFunctions = {
             return true;
         return false;
     },
+
+    numeric: (data, key) => {
+        if (data[key])
+            return /\d*/.test(data[key])
+        return false
+    }
 }
 
 module.exports = {
-    make: (data, rules) => {
+    check: (data, rules) => {
         let keys = Object.keys(rules)
         let result = []
         keys.forEach((key, index) => {

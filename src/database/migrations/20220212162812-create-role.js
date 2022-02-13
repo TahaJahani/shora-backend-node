@@ -15,11 +15,11 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ['owner', 'admin', 'financial', 'welfare','user'],
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

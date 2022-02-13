@@ -14,15 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Demand.init({
-    user_id: sequelize.INTEGER,
-    status: sequelize.ENUM,
-    body: sequelize.STRING(500),
-    category_id: sequelize.INTEGER,
+    user_id: DataTypes.INTEGER,
+    status: DataTypes.ENUM("pending", "accepted", "rejected"),
+    body: DataTypes.STRING(500),
+    category_id: DataTypes.INTEGER,
   }, {
     sequelize,
     paranoid: true,
     tableName: 'demands',
     modelName: 'Demand',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
   });
   return Demand;
 };

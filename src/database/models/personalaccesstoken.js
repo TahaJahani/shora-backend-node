@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     tableName: 'personal_access_tokens',
     modelName: 'PersonalAccessToken',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   });
   return PersonalAccessToken;
 };

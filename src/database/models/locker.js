@@ -14,11 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Locker.init({
-    letter: sequelize.STRING(2),
-    number: sequelize.INTEGER.UNSIGNED,
+    letter: DataTypes.STRING(2),
+    number: DataTypes.INTEGER.UNSIGNED,
   }, {
     sequelize,
+    tableName: 'lockers',
     modelName: 'Locker',
+    timestamps: false,
   });
   return Locker;
 };

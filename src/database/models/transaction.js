@@ -14,15 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Transaction.init({
-    amount: sequelize.BIGINT.UNSIGNED,
-    description: sequelize.STRING,
-    type: sequelize.ENUM,
-    at: sequelize.DATE,
+    amount: DataTypes.BIGINT.UNSIGNED,
+    description: DataTypes.STRING,
+    type: DataTypes.ENUM("withdraw", "deposit"),
+    at: DataTypes.DATE,
   }, {
     sequelize,
     paranoid: true,
     tableName: 'transactions',
     modelName: 'Transaction',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
   });
   return Transaction;
 };

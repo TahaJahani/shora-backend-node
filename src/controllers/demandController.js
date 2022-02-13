@@ -1,20 +1,25 @@
-const {Demand, Like, User, DemandCategory} = require("../database/sequelize")
+const { Demand, Like, User, DemandCategory } = require("../database/sequelize")
 const demandResource = require('../resources/demandResource')
+const validator = require('../services/validator')
+
 module.exports = {
     get: async (req, res) => {
-        let demand = Demand.findOne({
+        let val = validator.check(req.params, { id: 'required|numeric' })
+        if (val.length > 0)
+            return res.json({ status: 'error', message: val[0] })
+        let demand = await Demand.findOne({
             where: {
                 id: req.params.id
             },
-            include: [Like, DemandCategory]
+            include: ['likes', 'category']
         })
         if (!demand)
-            return res.json({status: 'error', message: 'تقاضای مورد نظر یافت نشد'})
-        return res.json({status: 'ok', 'data': {demand: demandResource.make(demand)}})
+            return res.json({ status: 'error', message: 'تقاضای مورد نظر یافت نشد' })
+        return res.json({ status: 'ok', 'data': { demand: demandResource.make(req, demand) } })
     },
 
     getAll: async (req, res) => {
-        
+
     },
 
     addDemand: async (req, res) => {

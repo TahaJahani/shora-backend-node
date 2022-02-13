@@ -14,12 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   DemandCategory.init({
-    name: sequelize.STRING,
+    name: DataTypes.STRING,
   }, {
     sequelize,
     paranoid: true,
     tableName: 'demand_categories',
     modelName: 'DemandCategory',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
   });
   return DemandCategory;
 };

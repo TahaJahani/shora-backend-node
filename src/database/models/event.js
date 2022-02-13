@@ -14,16 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Event.init({
-    name: sequelize.STRING,
-    start_at: sequelize.DATE,
-    finish_at: sequelize.DATE,
-    fee: sequelize.BIGINT.UNSIGNED,
-    gift: sequelize.BIGINT.UNSIGNED,
-    description: sequelize.TEXT,
+    name: DataTypes.STRING,
+    start_at: DataTypes.DATE,
+    finish_at: DataTypes.DATE,
+    fee: DataTypes.BIGINT.UNSIGNED,
+    gift: DataTypes.BIGINT.UNSIGNED,
+    description: DataTypes.TEXT,
   }, {
     sequelize,
     tableName: 'events',
     modelName: 'Event',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   });
   return Event;
 };

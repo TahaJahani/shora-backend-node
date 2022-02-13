@@ -14,12 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Book.init({
-    name: sequelize.STRING,
-    pages: sequelize.INTEGER.UNSIGNED,
+    name: DataTypes.STRING,
+    pages: DataTypes.INTEGER.UNSIGNED,
   }, {
     sequelize,
     tableName: 'books',
     modelName: 'Book',
+    timestamps: false,
   });
   return Book;
 };

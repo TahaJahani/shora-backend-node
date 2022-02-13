@@ -14,12 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Role.init({
-    user_id: sequelize.INTEGER,
-    role: sequelize.ENUM,
+    user_id: DataTypes.INTEGER,
+    role: DataTypes.ENUM('owner', 'admin', 'financial', 'welfare','user'),
   }, {
     sequelize,
     tableName: 'roles',
     modelName: 'Role',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   });
   return Role;
 };

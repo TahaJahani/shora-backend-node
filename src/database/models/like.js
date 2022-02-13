@@ -14,13 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Like.init({
-    user_id: sequelize.INTEGER,
-    likeable_type: sequelize.STRING,
-    likeable_id: sequelize.INTEGER,
+    user_id: DataTypes.INTEGER,
+    likeable_type: DataTypes.STRING,
+    likeable_id: DataTypes.INTEGER,
   }, {
     sequelize,
     tableName: 'likes',
     modelName: 'Like',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   });
   return Like;
 };
