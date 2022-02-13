@@ -4,9 +4,9 @@ const validator = require('../services/validator')
 
 module.exports = {
     get: async (req, res) => {
-        let val = validator.check(req.params, { id: 'required|numeric' })
-        if (val.length > 0)
-            return res.json({ status: 'error', message: val[0] })
+        let err = validator.check(req.params, { id: 'required|numeric' })
+        if (err.length > 0)
+            return res.json({ status: 'error', message: err[0] })
         let demand = await Demand.findOne({
             where: {
                 id: req.params.id
@@ -19,7 +19,9 @@ module.exports = {
     },
 
     getAll: async (req, res) => {
-
+        let err = validator.check(req.body, {category_id: 'numeric'})
+        if (err.length > 0)
+            return res.json({ status: 'error', message: err[0]})
     },
 
     addDemand: async (req, res) => {
