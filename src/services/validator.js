@@ -12,7 +12,7 @@ const getError = (ruleName, ruleParam, key) => {
 
 const ruleFunctions = {
     required: (data, key, param) => {
-        if (key in data && data[key])
+        if (data && key in data && data[key])
             return true;
         return false;
     },

@@ -3,6 +3,6 @@ const dictionary = {
 }
 module.exports = {
     translate: (word) => {
-        return dictionary[word]
+        return dictionary[word] ? dictionary[word] : word
     }
 }
