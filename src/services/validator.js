@@ -6,6 +6,7 @@ const getError = (ruleName, ruleParam, key) => {
         min: `مقدار ${translate(key)} باید حداقل ${ruleParam} باشد`,
         max: `مقدار ${translate(key)} باید حداکثر ${ruleParam} باشد`,
         in: `مقدار ${translate(key)} یک مقدار معتبر نیست`,
+        date: `${translate(key)} باید یک تاریخ معتبر باشد`,
     }
     return errors[ruleName]
 }
@@ -45,6 +46,13 @@ const ruleFunctions = {
         if (data && data[key]) {
             param = param.split(',')
             return param.includes(data[key])
+        }
+        return true
+    },
+
+    date: (data, key, param) => {
+        if (data && data[key]) {
+            return new Date(data[key]) !== "Invalid Date"
         }
         return true
     }
