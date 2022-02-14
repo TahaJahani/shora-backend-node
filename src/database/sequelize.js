@@ -16,6 +16,7 @@ const Book = require('./models/book')(sequelize, Sequelize)
 const Demand = require('./models/demand')(sequelize, Sequelize)
 const DemandCategory = require('./models/demandcategory')(sequelize, Sequelize)
 const Event = require('./models/event')(sequelize, Sequelize)
+const EventUser = require('./models/eventuser')(sequelize, Sequelize)
 const Like = require('./models/like')(sequelize, Sequelize)
 const Locker = require('./models/locker')(sequelize, Sequelize)
 const LostAndFound = require('./models/lostandfound')(sequelize, Sequelize)
@@ -88,6 +89,7 @@ module.exports = {
   Book,
   Demand,
   Event,
+  EventUser,
   Like,
   Locker,
   LostAndFound,
