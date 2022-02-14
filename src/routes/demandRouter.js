@@ -7,5 +7,11 @@ router.use(withAuthentication)
 
 router.get('/:id', demandController.get);
 router.get('/', demandController.getAll);
+router.post('/', demandController.addDemand);
+router.post('/like/:id', demandController.likeDemand)
+router.delete('/unlike/:id', demandController.unlikeDemand)
+router.post('/ban-user/:demand_id', withAbility(['owner', 'admin']), demandController.banUser)
+router.delete('/:id', withAbility(['owner', 'admin']), demandController.delete)
+router.post('/status', withAbility(['owner', 'admin']), demandController.changeStatus)
 
 module.exports = router;

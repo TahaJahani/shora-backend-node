@@ -68,7 +68,7 @@ module.exports = {
         })
         demand.user = req.user
         demand.likes = []
-        return res.json({ status: 'ok', data: { demand: demandResource.make(demand) } })
+        return res.json({ status: 'ok', data: { demand: demandResource.make(req, demand) } })
     },
 
     banUser: async (req, res) => {
