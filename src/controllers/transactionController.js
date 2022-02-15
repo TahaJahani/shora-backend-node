@@ -2,7 +2,7 @@ const validator = require('../services/validator')
 const {Transaction} = require('../database/sequelize')
 const {Op} = require('sequelize')
 module.exports = {
-    getTransactions: (req, res, next) => {
+    getTransactions: async (req, res, next) => {
         let err = validator.check(req.body, {
             from: 'date',
             to: 'date',
@@ -25,7 +25,7 @@ module.exports = {
         return res.json({status: 'ok', data: {transactions: transactions}})
     },
 
-    addTransaction: (req, res, next) => {
+    addTransaction: async (req, res, next) => {
         let err = validator.check(req.body, {
             amount: 'required|numeric|min:0',
             description: 'required',

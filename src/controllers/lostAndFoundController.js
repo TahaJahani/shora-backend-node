@@ -2,12 +2,12 @@ const validator = require('../services/validator')
 const {LostAndFound} = require('../database/sequelize')
 const { Op } = require("sequelize");
 module.exports = {
-    getAll: (req, res, next) => {
+    getAll: async (req, res, next) => {
         let found = await LostAndFound.findAll({where: {returned_at: {[Op.is]: null}}})
         return res.json({status: 'ok', data: {lost_and_found: found}})
     },
 
-    add: (req, res, next) => {
+    add: async (req, res, next) => {
         let err = validator.check(req.body, {
             name: 'required',
             found_in: 'required',
@@ -26,7 +26,7 @@ module.exports = {
 
     },
 
-    remove: (req, res, next) => {
+    remove: async (req, res, next) => {
         let err = validator.check(req.params, {found_id: 'required|numeric|min:1'})
         if (err.length > 0)
             return res.json({status: 'error', message: err[0]})
@@ -38,7 +38,7 @@ module.exports = {
         return res.json({status: 'ok'})
     },
 
-    return: (req, res, next) => {
+    return: async (req, res, next) => {
         let err = validator.check(req.params, {found_id: 'required|numeric|min:1'})
         if (err.length > 0)
             return res.json({status: 'error', message: err[0]})

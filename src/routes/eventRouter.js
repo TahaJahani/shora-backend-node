@@ -3,7 +3,7 @@ const withAbility = require('../middlewares/withAbility')
 const eventController = require('../controllers/eventController')
 var router = require('express').Router();
 router.use(withAuthentication)
-rouoter.use(withAbility(['owner', 'welfare']))
+router.use(withAbility(['owner', 'welfare']))
 
 
 router.get('/', eventController.getAll)

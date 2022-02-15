@@ -2,7 +2,7 @@ const validator = require('../services/validator')
 const {Event, User, EventUser, Transaction} = require('../database/sequelize')
 
 module.exports = {
-    add: (req, res, next) => {
+    add: async (req, res, next) => {
         let err = validator.check(req.body, {
             name: 'required',
             start_at: 'required|date',
@@ -25,7 +25,7 @@ module.exports = {
         return res.json({status: 'ok', data: {event: event}})
     },
 
-    delete: (req, res, next) => {
+    delete: async (req, res, next) => {
         let err = validator.check(req.params, {id: 'required|numeric|min:1'})
         if (err.length > 0)
             return res.json({status: 'error', message: 'شماره نامعتبر'})
@@ -44,7 +44,7 @@ module.exports = {
         return res.json({status: 'ok', message: 'با موفقیت حذف شد'})
     },
 
-    edit: (req, res, next) => {
+    edit: async (req, res, next) => {
         let err = validator.check(req.body, {
             event_id: 'required|numeric',
             start_at: 'date',
@@ -72,7 +72,7 @@ module.exports = {
         return res.json({status: 'ok', message: 'با موفقیت ویرایش شد'})
     },
 
-    getAll: (req, res, next) => {
+    getAll: async (req, res, next) => {
         let events = await Event.findAll({
             include: ['users'],
             order: [['start_at', 'DESC']]
@@ -80,7 +80,7 @@ module.exports = {
         return res.json({status: 'ok', data: {events: events}})
     },
 
-    registerUser: (req, res, next) => {
+    registerUser: async (req, res, next) => {
         let err = validator.check(req.body, {
             event_id: 'required|numeric|min:1',
             user_id: 'required|numeric|min:1',

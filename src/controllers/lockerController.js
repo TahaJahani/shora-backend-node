@@ -2,7 +2,7 @@ const validator = require('../services/validator')
 const { Locker } = require('../database/sequelize')
 const sequelize = require('sequelize')
 module.exports = {
-    getLockers: (req, res, next) => {
+    getLockers: async (req, res, next) => {
         let lockers = await Locker.findAll({
             where: {
                 id: {
@@ -13,7 +13,7 @@ module.exports = {
         return res.json({ status: 'ok', data: { lockers: lockers } })
     },
 
-    getLockersStatus: (req, res, next) => {
+    getLockersStatus: async (req, res, next) => {
         let lockers = await Locker.findAll({
             include: [{
                 model: 'rents',
