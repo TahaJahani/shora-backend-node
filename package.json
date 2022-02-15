@@ -22,6 +22,7 @@
     "morgan": "~1.9.1",
     "mysql2": "^2.3.3",
     "node-singleflight": "^0.1.2",
+    "nodemailer": "^6.7.2",
     "pg": "^8.7.1",
     "sequelize": "^6.12.1"
   },
