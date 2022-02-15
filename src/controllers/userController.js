@@ -1,9 +1,28 @@
-const { User, PersonalAccessToken } = require('../database/sequelize')
 const validator = require('../services/validator')
+const {User, Role, PasswordReset, PersonalAccessToken} = require('../database/sequelize')
 const tokenGenerator = require('../services/token')
 const bcrypt = require('bcryptjs');
-
 module.exports = {
+    completeUserInfo: async (req, res, next) => {
+
+    },
+
+    checkLogin: async (req, res, next) => {
+
+    },
+
+    getUser: async (req, res, next) => {
+
+    },
+
+    getUsers: async (req, res, next) => {
+
+    },
+
+    getAllUsersStudentNumber: async (req, res, next) => {
+
+    },
+
     login: async (req, res, next) => {
         let err = validator.check(req.body, {
             student_number: 'required|numeric',
@@ -37,5 +56,31 @@ module.exports = {
 
         }
         return res.json({ status: 'error', message: 'نام کاربری و یا رمز عبور نادرست می‌باشد' })
-    }
+    },
+
+    changePassword: async (req, res, next) => {
+
+    },
+
+    logout: async (req, res, next) => {
+
+    },
+
+    banUser: async (req, res, next) => {
+
+    },
+
+    unbanUser: async (req, res, next) => {
+
+    },
+
+    sendResetEmail: async (req, res, next) => {
+
+    },
+
+    resetPassword: async (req, res, next) => {
+
+    },
+
+
 }

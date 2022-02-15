@@ -1,4 +1,4 @@
-var userController = require('../controllers/usercontroller');
+var userController = require('../controllers/userController');
 var express = require('express');
 var router = express.Router();
 
