@@ -8,6 +8,7 @@ const getError = (ruleName, ruleParam, key) => {
         in: `مقدار ${translate(key)} یک مقدار معتبر نیست`,
         date: `${translate(key)} باید یک تاریخ معتبر باشد`,
         regex: `مقدار ${translate(key)} شکل معتبری ندارد`,
+        confirmed: `دو مقدار ${translate(key)} هم‌خوانی ندارد`,
     }
     return errors[ruleName]
 }
@@ -63,6 +64,12 @@ const ruleFunctions = {
             let reg = new RegExp(param)
             return reg.test(data[key])
         }
+        return true
+    },
+
+    confirmed: (data, key, param) => {
+        if (data && data[key])
+            return data[key] === data[`${key}_confirmation`]
         return true
     }
 }
