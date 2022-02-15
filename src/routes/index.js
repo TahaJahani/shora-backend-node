@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 
 const authRouter = require('./authRouter')
+const userRouter = require('./userRouter')
 const demandRouter = require('./demandRouter')
 const eventRouter = require('./eventRouter')
 const lostAndFoundRouter = require('./lostAndFoundRouter')
@@ -17,6 +18,7 @@ router.use(bodyParser.json())
 router.get('/', userController.register);
 
 router.use('/auth', authRouter)
+router.use('/users', userRouter)
 router.use('/demands', demandRouter)
 router.use('/events', eventRouter)
 router.use('/lost-and-found', lostAndFoundRouter)

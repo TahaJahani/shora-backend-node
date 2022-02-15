@@ -1,7 +1,18 @@
-const userController = require('../controllers/userController')
+const userController = require('../controllers/userController');
+const withAbility = require('../middlewares/withAbility');
+const withAuthentication = require('../middlewares/withAuthentication');
 var router = require('express').Router();
 
 
-router.post('/login', authController.login);
+router.post('/login', userController.login);
+router.post('/send-reset-mail', userController.sendResetEmail)
+router.post('/reset-pass', userController.resetPassword)
+router.get('/check-login', userController.checkLogin)
+
+
+router.post('/complete-info', withAuthentication, userController.completeUserInfo)
+route.post('/change-password', withAuthentication, userController.changePassword)
+route.post('/logout', withAuthentication, userController.logout)
+router.get('/:student_number', withAuthentication, withAbility(['admin', 'owner']), userController.getUser)
 
 module.exports = router;
