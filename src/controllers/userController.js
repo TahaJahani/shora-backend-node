@@ -4,7 +4,7 @@ const tokenGenerator = require('../services/token')
 const bcrypt = require('bcryptjs');
 module.exports = {
     completeUserInfo: async (req, res, next) => {
-
+        
     },
 
     checkLogin: async (req, res, next) => {

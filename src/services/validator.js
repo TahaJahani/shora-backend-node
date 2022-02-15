@@ -7,6 +7,7 @@ const getError = (ruleName, ruleParam, key) => {
         max: `مقدار ${translate(key)} باید حداکثر ${ruleParam} باشد`,
         in: `مقدار ${translate(key)} یک مقدار معتبر نیست`,
         date: `${translate(key)} باید یک تاریخ معتبر باشد`,
+        regex: `مقدار ${translate(key)} شکل معتبری ندارد`,
     }
     return errors[ruleName]
 }
@@ -53,6 +54,14 @@ const ruleFunctions = {
     date: (data, key, param) => {
         if (data && data[key]) {
             return new Date(data[key]) !== "Invalid Date"
+        }
+        return true
+    },
+
+    regex: (data, key, param) => {
+        if (data && data[key]) {
+            let reg = new RegExp(param)
+            return reg.test(data[key])
         }
         return true
     }
