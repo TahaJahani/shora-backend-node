@@ -11,8 +11,8 @@ router.get('/check-login', userController.checkLogin)
 
 
 router.post('/complete-info', withAuthentication, userController.completeUserInfo)
-route.post('/change-password', withAuthentication, userController.changePassword)
-route.post('/logout', withAuthentication, userController.logout)
+router.post('/change-password', withAuthentication, userController.changePassword)
+router.post('/logout', withAuthentication, userController.logout)
 router.get('/:student_number', withAuthentication, withAbility(['admin', 'owner']), userController.getUser)
 
 module.exports = router;

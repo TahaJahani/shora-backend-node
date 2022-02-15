@@ -14,9 +14,6 @@ const rentRouter = require('./rentRouter')
 var bodyParser = require('body-parser');
 router.use(bodyParser.json())
 
-/* GET home page. */
-router.get('/', userController.register);
-
 router.use('/auth', authRouter)
 router.use('/users', userRouter)
 router.use('/demands', demandRouter)
