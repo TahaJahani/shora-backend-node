@@ -3,26 +3,39 @@ const {Transaction} = require('../database/sequelize')
 const {Op} = require('sequelize')
 module.exports = {
     getTransactions: async (req, res, next) => {
-        let err = validator.check(req.body, {
-            from: 'date',
-            to: 'date',
-            type: 'in:deposit,withdraw'
-        })
-        if (err.length > 0)
-            return res.json({status: 'error', message: err[0]})
+        client.get('transactions', (err, result) => {
+            if (err != null) {
+                res.status(500).send(JSON.stringify(
+                    {"error": err.message,}
+                ));
+            } else if (result == undefined || result == null) {
+                let err = validator.check(req.body, {
+                    from: 'date',
+                    to: 'date',
+                    type: 'in:deposit,withdraw'
+                })
+                if (err.length > 0)
+                    return res.json({status: 'error', message: err[0]})
+                
+                let whereClause = {}
+                if (req.body.from)
+                    whereClause.at = {[Op.gt]: req.body.from}
+                if (req.body.to)
+                    whereClause.at = {[Op.lt]: req.body.to}
+                if (req.body.type)
+                    whereClause.type = req.body.type
+                let transactions = await Transaction.findAll({
+                    where: whereClause,
+                    attributes: ['id', 'amount', 'type', 'at', 'description']
+                })
+                client.set('transactions', JSON.stringify({status: 'ok', data: {transactions: transactions}}), 'EX', 60 * 60 * 24);
+                res.json({status: 'ok', data: {transactions: transactions}})
+            } else {
+                res.json(JSON.parse(result));
+            }
+        });
+
         
-        let whereClause = {}
-        if (req.body.from)
-            whereClause.at = {[Op.gt]: req.body.from}
-        if (req.body.to)
-            whereClause.at = {[Op.lt]: req.body.to}
-        if (req.body.type)
-            whereClause.type = req.body.type
-        let transactions = await Transaction.findAll({
-            where: whereClause,
-            attributes: ['id', 'amount', 'type', 'at', 'description']
-        })
-        return res.json({status: 'ok', data: {transactions: transactions}})
     },
 
     addTransaction: async (req, res, next) => {
@@ -41,6 +54,8 @@ module.exports = {
             type: req.body.type,
             at: req.body.at,
         })
+
+        client.del('transactions');
         return res.json({status: 'ok', message: 'با موفقیت ثبت شد', data: {transaction: transaction}})
     },
 }
