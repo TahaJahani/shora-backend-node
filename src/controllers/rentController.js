@@ -1,15 +1,35 @@
 const validator = require('../services/validator')
 const { Rent, User, Locker, Book, Transaction } = require('../database/sequelize')
 const { Op } = require('sequelize')
+const redis = require('redis');
+
+const client = redis.createClient({
+    host: "host.docker.internal",
+    port: "6379"
+});
+
 module.exports = {
     getRents: async (req, res, next) => {
-        let rents = await Rent.findAll({
-            where: {
-                returned_at: { [Op.is]: null }
-            },
-            include: ['user', 'rentable']
-        })
-        return res.json({ status: 'ok', data: { rents: rents } })
+        client.get('rents', (err, result) => {
+            if (err != null) {
+                res.status(500).send(JSON.stringify(
+                    {"error": err.message,}
+                ));
+            } else if (result == undefined || result == null) {
+                let rents = await Rent.findAll({
+                    where: {
+                        returned_at: { [Op.is]: null }
+                    },
+                    include: ['user', 'rentable']
+                })
+                client.set(hash, JSON.stringify({ status: 'ok', data: { rents: rents } }), 'EX', 60 * 60 * 24);
+                res.json({ status: 'ok', data: { rents: rents } })
+            } else {
+                res.json(JSON.parse(result));
+            }
+        });
+        
+        
     },
 
     addRent: async (req, res, next) => {
@@ -54,6 +74,8 @@ module.exports = {
 
         rent.user = rentUser
         rent.rentable = rentable
+
+        client.del('rents');
         return res.json({status: 'ok', message: 'با موفقیت ثبت شد', data: {rent: rent}})
     },
 
@@ -84,6 +106,8 @@ module.exports = {
                 at: req.body.returned_at
             })
         }
+
+        client.del('rents');
         return res.json({status: 'ok', message: 'با موفقیت ثبت شد'})
     }
 }

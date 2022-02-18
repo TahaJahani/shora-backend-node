@@ -2,21 +2,41 @@ const { Op } = require("sequelize")
 const { Demand, Like, User, DemandCategory } = require("../database/sequelize")
 const demandResource = require('../resources/demandResource')
 const validator = require('../services/validator')
+const redis = require('redis');
+
+const client = redis.createClient({
+    host: "host.docker.internal",
+    port: "6379"
+});
 
 module.exports = {
     get: async (req, res) => {
         let err = validator.check(req.params, { id: 'required|numeric|min:1' })
-        if (err.length > 0)
-            return res.json({ status: 'error', message: err[0] })
-        let demand = await Demand.findOne({
-            where: {
-                id: req.params.id
-            },
-            include: ['likes', 'category']
-        })
-        if (!demand)
-            return res.json({ status: 'error', message: 'تقاضای مورد نظر یافت نشد' })
-        return res.json({ status: 'ok', 'data': { demand: demandResource.make(req, demand) } })
+        if (err.length > 0) {
+            return res.json({ status: 'error', message: err[0] });
+        }
+
+        client.get('demand' + req.params.id, (err, result) => {
+            if (err != null) {
+                res.status(500).send(JSON.stringify(
+                    {"error": err.message,}
+                ));
+            } else if (result == undefined || result == null) {
+                let demand = await Demand.findOne({
+                    where: {
+                        id: req.params.id
+                    },
+                    include: ['likes', 'category']
+                })
+                if (!demand) res.json({ status: 'error', message: 'تقاضای مورد نظر یافت نشد' });
+                else {
+                    client.set('demand' + req.params.id, JSON.stringify({ status: 'ok', 'data': { demand: demandResource.make(req, demand) } }), 'EX', 60 * 60 * 24);
+                    res.json({ status: 'ok', 'data': { demand: demandResource.make(req, demand) } });
+                }
+            } else {
+                res.json(JSON.parse(result));
+            }
+        });
     },
 
     getAll: async (req, res) => {
@@ -86,6 +106,7 @@ module.exports = {
         let err = validator.check(req.params, { id: 'required|numeric|min:1' })
         if (err.length > 0)
             return res.json({ status: 'error', message: err[0] })
+        client.del('demand' + req.params.id);
         await Demand.destroy({ where: { id: req.params.id } })
         return res.json({ status: 'ok' })
     },
@@ -96,8 +117,9 @@ module.exports = {
             return res.json({ status: 'error', message: err[0] })
         let demand = await Demand.findOne({ where: { id: req.params.id } })
         if (!demand)
-            return res.json({ status: 'error', message: 'تقاضای مورد نظر یافت نشد' })
+            return res.json({ status: 'error', message: 'تقاضای مورد نظر یافت نشد' });
         try {
+            client.del('demand' + req.params.id);
             await Like.create({
                 user_id: req.user.id,
                 likeable_id: demand.id,
@@ -112,7 +134,8 @@ module.exports = {
     unlikeDemand: async (req, res) => {
         let err = validator.check(req.params, { id: 'required|numeric|min:1' })
         if (err.length > 0)
-            return res.json({ status: 'error', message: err[0] })
+            return res.json({ status: 'error', message: err[0] });
+        client.del('demand' + req.params.id);
         await Like.destroy({
             where: {
                 user_id: req.user.id,
@@ -129,8 +152,8 @@ module.exports = {
             status: 'required|in:pending,accepted,rejected'
         })
         if (err.length > 0)
-            return res.json({status: 'error', message: err[0]})
-        
+            return res.json({status: 'error', message: err[0]});
+        client.del('demand' + req.params.id);
         await Demand.update({status: req.body.status}, {where: {id: req.body.demand_id}})
         return res.json({status: 'ok'})
     }
