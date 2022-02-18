@@ -1,7 +1,7 @@
 const {DemandCategory} = require('../database/sequelize')
 module.exports = {
     get: async (req, res, next) => {
-        client.get("categories", (err, result) => {
+        client.get("categories", async (err, result) => {
             if (err != null) {
                 res.status(500).send(JSON.stringify(
                     {"error": err.message,}

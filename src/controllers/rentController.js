@@ -10,7 +10,7 @@ const client = redis.createClient({
 
 module.exports = {
     getRents: async (req, res, next) => {
-        client.get('rents', (err, result) => {
+        client.get('rents', async (err, result) => {
             if (err != null) {
                 res.status(500).send(JSON.stringify(
                     {"error": err.message,}

@@ -10,7 +10,7 @@ const client = redis.createClient({
 
 module.exports = {
     getAll: async (req, res, next) => {
-        client.get('getAllLostAndFounds', (err, result) => {
+        client.get('getAllLostAndFounds', async (err, result) => {
             if (err != null) {
                 res.status(500).send(JSON.stringify(
                     {"error": err.message,}
@@ -68,7 +68,7 @@ module.exports = {
                 id: req.params.found_id
             }
         })
-        
+
         client.del('getAllLostAndFounds');
         return res.json({status: 'ok'})
     },

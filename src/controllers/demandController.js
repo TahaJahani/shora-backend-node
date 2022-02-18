@@ -16,7 +16,7 @@ module.exports = {
             return res.json({ status: 'error', message: err[0] });
         }
 
-        client.get('demand' + req.params.id, (err, result) => {
+        client.get('demand' + req.params.id, async (err, result) =>{
             if (err != null) {
                 res.status(500).send(JSON.stringify(
                     {"error": err.message,}

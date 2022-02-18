@@ -11,7 +11,7 @@ const client = redis.createClient({
 
 module.exports = {
     getLockers: async (req, res, next) => {
-        client.get('lockers', (err, result) => {
+        client.get('lockers', async (err, result) => {
             if (err != null) {
                 res.status(500).send(JSON.stringify(
                     {"error": err.message,}
@@ -33,7 +33,7 @@ module.exports = {
     },
 
     getLockersStatus: async (req, res, next) => {
-        client.get('lockersstatus', (err, result) => {
+        client.get('lockersstatus', async (err, result) => {
             if (err != null) {
                 res.status(500).send(JSON.stringify(
                     {"error": err.message,}
