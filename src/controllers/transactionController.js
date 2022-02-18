@@ -1,9 +1,16 @@
 const validator = require('../services/validator')
 const {Transaction} = require('../database/sequelize')
 const {Op} = require('sequelize')
+const redis = require('redis');
+
+const client = redis.createClient({
+    host: "host.docker.internal",
+    port: "6379"
+});
+
 module.exports = {
     getTransactions: async (req, res, next) => {
-        client.get('transactions', (err, result) => {
+        client.get('transactions', async (err, result) => {
             if (err != null) {
                 res.status(500).send(JSON.stringify(
                     {"error": err.message,}

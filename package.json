@@ -24,6 +24,7 @@
     "node-singleflight": "^0.1.2",
     "nodemailer": "^6.7.2",
     "pg": "^8.7.1",
+    "redis": "^4.0.3",
     "sequelize": "^6.12.1"
   },
   "devDependencies": {
